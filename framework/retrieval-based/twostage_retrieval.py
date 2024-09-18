@@ -1,13 +1,7 @@
 import json
-import openai
 import numpy as np
-from openai import OpenAI
 from llm_tools import *
 from tqdm import tqdm
-
-os.environ.update({"OPENAI_API_KEY": ""})
-client = OpenAI()
-EMBEDDING_MODEL = "text-embedding-3-small"
 
 def llm_predict(text, stop=[]):
     return chatgpt(text, stop)
@@ -26,9 +20,6 @@ def get_history_datasets() -> list:
     return history_event
 
 history_event = get_history_datasets()
-
-def get_embedding(text, model=EMBEDDING_MODEL):
-    return client.embeddings.create(input=text, model=model).data[0].embedding
 
 def vector_similarity(x, y):
     return np.dot(np.array(x), np.array(y))
