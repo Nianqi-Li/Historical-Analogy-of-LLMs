@@ -1,1 +1,1 @@
-# HistoricalAnalogy-of-LLMs
+# Historical-Analogy-of-LLMs
