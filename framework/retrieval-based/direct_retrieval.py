@@ -1,5 +1,4 @@
 import json
-import openai
 import numpy as np
 from llm_tools import *
 from tqdm import tqdm
