@@ -1,5 +1,6 @@
 import os
 from langchain_openai import ChatOpenAI
+from openai import OpenAI
 import google.generativeai as genai
 
 # GPT4
@@ -51,3 +52,11 @@ def gemini(text, stop=[]):
                                       generation_config=generation_config)
     ans = response.text
     return ans
+
+# Embeddings
+client = OpenAI()
+EMBEDDING_MODEL = "text-embedding-3-small"
+
+def get_embedding(text, model=EMBEDDING_MODEL):
+    return client.embeddings.create(input=text, model=model).data[0].embedding
+
