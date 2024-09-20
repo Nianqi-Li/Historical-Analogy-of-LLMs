@@ -39,7 +39,7 @@ python reflection_generation.py --model chatgpt --testset /path/to/testset
 Where reflection_generation.py can also be replaced with other frameworks. 
 This repository currently only contains chatgpt & gpt4 models, some frameworks support gemini. 
 But adding models is simple, if you need to add other models, please add to llm_tools.py and set the new model in the llm_predict function in the framework.
-For the test set, both popular_analogy and general_analogy are available, if you want to test other samples, make sure that the file is in .jsonl format and each sample contains “event_name” and ” event_intro” keywords.
+For the test set, both popular_analogy and general_analogy are available, if you want to test other samples, make sure that the file is in .jsonl format and each sample contains "event_name" and "event_intro" keywords.
 
 ## Ethics Statement
 ### Use of Human Annotations
