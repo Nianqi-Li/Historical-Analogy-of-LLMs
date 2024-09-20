@@ -7,11 +7,20 @@ import ast
 import json
 from tqdm import tqdm
 import wikipedia
+import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--model", required=True, choices=['chatgpt', 'gpt4'], type=str)
+parser.add_argument("--testset", required=True, type=str)
+args = parser.parse_args()
+        
 os.environ.update({"OPENAI_API_KEY": ""})
 
 # get candidate conversation-chain
-llm_getcandidate = ChatOpenAI(model_name="gpt-3.5-turbo")
+if args.model == 'chatgpt':
+    llm_getcandidate = ChatOpenAI(model_name="gpt-3.5-turbo")
+elif args.model == 'gpt4':
+    llm_getcandidate = ChatOpenAI(model_name="gpt-4")
 memory_getcandidate = ConversationBufferMemory()
 template_getcandidate = """ You're a robot for getting historical analogies events. Historical Analogy is comparsion of a known past event or person with a contemporary but unfamiliar event or person in order to identify common aspects between the two.
 For input events, please consider the summary, background, process and results, and output 5 historical events that are similar in many aspects above, and return them in list format.
@@ -44,7 +53,10 @@ memory_getcandidate = ConversationBufferMemory(memory_key="chat_history",input_k
 getcandidateChain = LLMChain(llm=llm_getcandidate, prompt=prompt_getcandidate, verbose=False, memory=memory_getcandidate)
 
 # get analogy choose model
-llm = ChatOpenAI(model_name="gpt-3.5-turbo")
+if args.model == 'chatgpt':
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo")
+elif args.model == 'gpt4':
+    llm = ChatOpenAI(model_name="gpt-4")
 
 def llm_choice(event:dict, candidate:list, warm_up:bool=False ,thought:str=''):
     if warm_up:
@@ -203,7 +215,7 @@ def read_jsonl(file_path: str) -> list:
     return data
 
 if __name__ == "__main__":
-    testset = read_jsonl('testset.jsonl')
+    testset = read_jsonl(args.testset)
     for event in tqdm(testset[:]): 
         with open('output.jsonl', 'a+', encoding='utf-8') as f:      
             ans = historical_analogy(event)
