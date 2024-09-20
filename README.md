@@ -1,6 +1,5 @@
 <h1 align="center">Past Meets Present: Creating Historical Analogy with Large Language Models</h1>
 
-## Overview
 ![](images/example.png)
 
 Historical analogies, which compare known past events with contemporary but unfamiliar events, are important abilities that help people make decisions and understand the world.
