@@ -15,9 +15,7 @@ llm_getcandidate = ChatOpenAI(model_name="gpt-3.5-turbo")
 memory_getcandidate = ConversationBufferMemory()
 template_getcandidate = """ You're a robot for getting historical analogies events. Historical Analogy is comparsion of a known past event or person with a contemporary but unfamiliar event or person in order to identify common aspects between the two.
 For input events, please consider the summary, background, process and results, and output 5 historical events that are similar in many aspects above, and return them in list format.
-Self-analogy or analogy related to/containing itself/contained by itself is not allowed.
 If there is any reflection, please modify the recommended events based on the reflection.
-In addition, make sure that the event used for the analogy occurs before the input event.
 The following is an example:
 
 Input Event: 
@@ -52,11 +50,6 @@ def llm_choice(event:dict, candidate:list, warm_up:bool=False ,thought:str=''):
     if warm_up:
         template = '''You are a historical analogy reflection robot. Historical Analogy is comparsion of a known past event or person with a contemporary but unfamiliar event or person in order to identify common aspects between the two.
         For the input event and the candidate event set, please make a comparison, reflect on the shortcomings of the candidate set, and make suggestions for obtaining a better analogous candidate set. Suggestions should be succinct and concise, with a single sentence indicating the direction of change for the candidate set.
-        For analogies, there are several points to pay attention to:
-        1. The events should be unrelated but similar. Self-analogy or analogy related to/containing itself/contained by itself is not allowed.
-        2. The fame of the analogy event should also be considered. Generally speaking, famous events are better for analogies
-        3. Analogies focus more on similarities at the abstract level, and the specific processes do not need to be the same
-
         Here is a example:
         
         == example
@@ -86,13 +79,6 @@ def llm_choice(event:dict, candidate:list, warm_up:bool=False ,thought:str=''):
     else:
         template = '''You are a historical analogy robot. Historical Analogy is comparsion of a known past event or person with a contemporary but unfamiliar event or person in order to identify common aspects between the two.
         For the input event and the candidate event set used for selection, your goal is to find a most suitable event that can be used for historical analogies, which means the two events are similar in causes, processes, results, etc. If the events in the candidate set are not appropriate or better analogies may exist, you should reflect on the shortcomings of these events in the analogies, pointing out the desired focus of the analogies to help find a new candidate set of events.
-        For analogies, there are several points to pay attention to:
-        1. The events should be unrelated but similar. Self-analogy or analogy related to/containing itself/contained by itself is not allowed.
-        2. The fame of the analogy event should also be considered. Generally speaking, famous events are better for analogies
-        3. Analogy focuses more on similarities at the abstract level, including the overall situation described, the tendency of the description, and the specific process does not have to be the same.
-        4. You can only use past events for analogies, so the analogy event should happen before the input event
-        5. The final answer should be only one event, which is the most appropriate analogy
-        
         Here are two case:
         
         ==== case 1
