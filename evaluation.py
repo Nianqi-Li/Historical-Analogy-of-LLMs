@@ -10,6 +10,11 @@ from tqdm import tqdm
 from langchain.chat_models import ChatOpenAI
 import random
 import re
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--testset", required=True, type=str)
+args = parser.parse_args()
 
 os.environ.update({"OPENAI_API_KEY": ""})
 gpt4 = ChatOpenAI(model_name="gpt-4",temperature=0.0000000001)
@@ -150,34 +155,47 @@ def jacc(text1, text2):
     return intersection / union
 
 # multi-dimensional similarity score
-def multi_dimensional_similarity(data):
+def multi_dimensional_similarity(testset):
+    score = []
+    dimensions = ["topic","background","process","result"]      
+    for data in tqdm(testset):
+        input_event = extract_features(data)  
+        analog_event = {"event_name": data['analogy_event'],
+                        "event_intro": wiki(data['analogy_event'])} 
+        analog_event = extract_features(analog_event, input_example=input_event)   
+        data['score'] = {"topic":{"high_level":{},"low_level":{}},
+                         "background":{"high_level":{},"low_level":{}},
+                         "process":{"high_level":{},"low_level":{}},
+                         "result":{"high_level":{},"low_level":{}}}
+        for d in dimensions:
+            data['score'][d]['abstract_level'] = abstract_similarity(input_event[d],analog_event[d])
+            data['score'][d]['literal_level'] = jacc(input_event[d],analog_event[d])
+        score.append(data)
+
     abstract_score = {"topic":0,"background":0,"process":0,"result":0} 
     literal_score = {"topic":0,"background":0,"process":0,"result":0} 
     overall_score = {"topic":0,"background":0,"process":0,"result":0,"all":0} 
-  
-    input_event = extract_features(data)  
-    analog_event = {"event_name": data['analogy_event'],
-                    "event_intro": wiki(data['analogy_event'])} 
-    analog_event = extract_features(analog_event, input_example=input_event)   
-    data['score'] = {"topic":{"high_level":{},"low_level":{}},
-                     "background":{"high_level":{},"low_level":{}},
-                     "process":{"high_level":{},"low_level":{}},
-                     "result":{"high_level":{},"low_level":{}}}
-    dimensions = ["topic","background","process","result"]       
-    for d in dimensions:
-        data['score'][d]['abstract_level'] = abstract_similarity(input_event[d],analog_event[d])
-        data['score'][d]['literal_level'] = jacc(input_event[d],analog_event[d])
-      
-    for d in dimensions:
-        abstract_level = data['score'][d]['abstract_level']
-        literal_level = data['score'][d]['literal_level']
-        abstract_score[d] = abstract_level
-        literal_score[d] = literal_level
-        if literal_level >= 0.35:
-            literal_level = 0
-        else:
-            literal_level = 0.35-literal_level
-        overall = abstract_level * literal_level
-        overall_score[d] = overall
-    overall_score['all'] = overall_score['topic']*0.5+overall_score['background']*1+overall_score['process']*2+overall_score['result']*2
+    for data in score:
+        overall_temp = {"topic":0,"background":0,"process":0,"result":0}
+        for d in dimensions:
+            abstract_level = data['score'][d]['abstract_level']
+            literal_level = data['score'][d]['literal_level']
+            abstract_score[d] += abstract_level/len(score)
+            literal_score[d] += literal_level/len(score)
+            if literal_level >= 0.35:
+                literal_level = 0
+            else:
+                literal_level = 0.35-literal_level
+            overall = abstract_level * literal_level
+            overall_score[d] += overall/len(score)
+            overall_temp[d] = overall
+        overall_score['all'] += (overall_temp['topic']*0.5+overall_temp['background']*1+overall_temp['process']*2+overall_temp['result']*2)/len(score)
     return abstract_score, literal_score, overall_score
+
+if __name__ == "__main__":
+    testset = read_jsonl(args.testset)
+    abstract_score, literal_score, overall_score = multi_dimensional_similarity(testset)
+    print(f"abstract score: {abstract_score}")
+    print(f"literal score: {literal_score}")
+    print(f"overall multi-dimensional similarity: {overall_score}")
+        
