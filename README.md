@@ -41,6 +41,12 @@ This repository currently only contains chatgpt & gpt4 models, some frameworks s
 But adding models is simple, if you need to add other models, please add to llm_tools.py and set the new model in the llm_predict function in the framework.
 For the test set, both popular_analogy and general_analogy are available, if you want to test other samples, make sure that the file is in .jsonl format and each sample contains "event_name" and "event_intro" keywords.
 
+To run our multi-dimensional similarity metrics please use the following command:
+```bash
+python evaluation.py --testset /path/to/testset
+```
+The testset file should be in the same format as the output of the framework, i.e. in .jsonl format, and each sample should have the keywords "event_name", "event_intro" and "analogy_event".
+
 ## Ethics Statement
 ### Use of Human Annotations
 Evaluation on the identified historical analogies from LLMs is implemented by three annotators recruited by our institution. The construction team remains anonymous to the authors. 
