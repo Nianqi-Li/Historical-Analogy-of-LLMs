@@ -1,7 +1,4 @@
-# Historical-Analogy-of-LLMs
-![](images/title_page.png)
-
-Resources for our paper: Past Meets Present: Creating Historical Analogy with Large Language Models
+<h1 align="center">Past Meets Present: Creating Historical Analogy with Large Language Models</h1>
 
 ## Overview
 ![](images/example.png)
