@@ -31,7 +31,19 @@ And the performance of the models can be further improved by using our self-refl
 - **`evaluation.py`**: Automated evaluation with pass@1 and multi-dimensional similarity metrics
 
 ### 2. Dataset
-**`event_pool.jsonl`** is a collection of 658 historical events from Google Arts and Culture. **`general_analogy.jsonl`** is a subset of **`event_pool.jsonl`** and contains general historical events for which historical analogies need to be found. **`popular_analogy.jsonl`** is a manual collection of famous historical analogies from the web and articles with reference answers.
+**`event_pool.jsonl`** is a collection of 658 historical events from Google Arts and Culture. 
+**`general_analogy.jsonl`** is a subset of **`event_pool.jsonl`** and contains general historical events for which historical analogies need to be found. 
+**`popular_analogy.jsonl`** is a manual collection of famous historical analogies from the web and articles with reference answers.
+
+### 3. Usage
+To run our framework please use the following command:
+```bash
+python reflection_generation.py --model chatgpt --testset /path/to/testset
+```
+Where reflection_generation.py can also be replaced with other frameworks. 
+This repository currently only contains chatgpt & gpt4 models, some frameworks support gemini. 
+But adding models is simple, if you need to add other models, please add to llm_tools.py and set the new model in the llm_predict function in the framework.
+For the test set, both popular_analogy and general_analogy are available, if you want to test other samples, make sure that the file is in .jsonl format and each sample contains “event_name” and ” event_intro” keywords.
 
 ## Ethics Statement
 ### Use of Human Annotations
