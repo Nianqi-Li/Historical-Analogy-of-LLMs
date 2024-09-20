@@ -31,7 +31,7 @@ And the performance of the models can be further improved by using our self-refl
 **`general_analogy.jsonl`** is a subset of **`event_pool.jsonl`** and contains general historical events for which historical analogies need to be found. 
 **`popular_analogy.jsonl`** is a manual collection of famous historical analogies from the web and articles with reference answers.
 
-### 3. Usage
+## Usage
 To run our framework please use the following command:
 ```bash
 python reflection_generation.py --model chatgpt --testset /path/to/testset
