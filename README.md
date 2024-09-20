@@ -4,6 +4,8 @@
 Resources for our paper: Past Meets Present: Creating Historical Analogy with Large Language Models
 
 ## Overview
+![](images/example.png)
+
 Historical analogies, which compare known past events with contemporary but unfamiliar events, are important abilities that help people make decisions and understand the world.
 However, research in applied history suggests that people have difficulty finding appropriate analogies. 
 And previous studies in the AI community have also overlooked historical analogies.
