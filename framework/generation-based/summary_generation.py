@@ -2,10 +2,20 @@ import ast
 import wikipedia
 import json
 from tqdm import tqdm
-from llm_tools import *
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--model", required=True, choices=['chatgpt', 'gpt4', 'gemini'], type=str)
+parser.add_argument("--testset", required=True, type=str)
+args = parser.parse_args()
 
 def llm_predict(text, stop=[]):
-    return chatgpt(text, stop)
+    if args.model == 'chatgpt':
+        return chatgpt(text, stop)
+    elif args.model == 'gpt4':
+        return gpt4(text, stop)
+    elif args.model == 'gemini':
+        return gemini(text, stop)
 
 def event_analysis(event:dict) -> dict:
     template = '''
@@ -92,7 +102,7 @@ def read_jsonl(file_path: str) -> list:
     return data
 
 if __name__ == "__main__":
-    testset = read_jsonl('testset.jsonl')
+    testset = read_jsonl(args.testset)
     for event in tqdm(testset[:]): 
         with open('output.jsonl', 'a+', encoding='utf-8') as f:      
             event = event_analysis(event)
