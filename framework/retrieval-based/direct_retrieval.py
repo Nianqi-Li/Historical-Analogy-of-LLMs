@@ -2,9 +2,11 @@ import json
 import numpy as np
 from llm_tools import *
 from tqdm import tqdm
+import argparse
 
-def llm_predict(text, stop=[]):
-    return chatgpt(text, stop)
+parser = argparse.ArgumentParser()
+parser.add_argument("--testset", required=True, type=str)
+args = parser.parse_args()
 
 def read_jsonl(file_path: str) -> list:
     data = []
@@ -32,7 +34,7 @@ def get_similar_events(event: dict) -> list:
     return [e[0] for e in similar_events]
 
 if __name__ == "__main__":
-    testset = read_jsonl('testset.jsonl')
+    testset = read_jsonl(args.testset)
     for event in tqdm(testset[:]): 
         with open('output_file.jsonl', 'a+', encoding='utf-8') as f:      
             candidate = get_similar_events(event)
